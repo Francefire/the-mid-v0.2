@@ -6,7 +6,8 @@ export const rooms = {
     return await tablesDB.createRow({
       databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
       tableId: "rooms",
-      rowId: room.id,
+      rowId: room.$id,
+      data: room,
     });
   },
   listRooms: async () => {
