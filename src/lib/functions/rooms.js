@@ -49,4 +49,38 @@ export const rooms = {
       return false;
     }
   },
+  joinRoom: async (roomId, userId) => {
+    // Récupérer la room actuelle
+    const roomData = await tablesDB.listRows({
+      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      tableId: "rooms",
+      queries: [Query.equal("$id", roomId)],
+    });
+    
+    if (!roomData.rows || roomData.rows.length === 0) {
+      throw new Error("Room non trouvée");
+    }
+    
+    const room = roomData.rows[0];
+    
+    // Vérifier si l'utilisateur n'est pas déjà dans la room
+    if (room.playerIds && room.playerIds.includes(userId)) {
+      return room; // Déjà dans la room
+    }
+    
+    // Vérifier si la room est pleine
+    if (room.playerIds && room.playerIds.length >= room.maxPlayers) {
+      throw new Error("Room pleine");
+    }
+    
+    // Ajouter l'utilisateur à la room
+    const updatedPlayerIds = [...(room.playerIds || []), userId];
+    
+    return await tablesDB.updateRow({
+      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      tableId: "rooms",
+      rowId: roomId,
+      data: { playerIds: updatedPlayerIds },
+    });
+  },
 };

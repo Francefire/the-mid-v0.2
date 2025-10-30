@@ -1,108 +1,101 @@
-import React, { useState, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { CheckSquare, Calculator, Home, Users } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  NavigationMenu
+} from "@/components/ui/navigation-menu";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { useAuth } from "@/context/authContext";
-import { profile } from "@/lib/functions/profile";
+import { BookText, Gamepad2, Home, LogOut } from "lucide-react";
+import { Link, Outlet } from "react-router-dom";
 
-const MainLayout = () => {
-  const location = useLocation();
-  const { user, logout } = useAuth();
-  const [userInfos, setUserInfos] = useState(null);
-  useEffect(() => {
-    profile.getProfile(user.$id).then((response) => {
-      setUserInfos(response);
-    });
-  }, [user]);
-
-  const AvatarComponent = () => {
-    return userInfos ? (
-      <Avatar>
-        <AvatarImage src={userInfos?.profilePictureUrl} />
-        <AvatarFallback>{userInfos?.firstName.charAt(0)}</AvatarFallback>
-      </Avatar>
-    ) : (
-      <Avatar>
-        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-      </Avatar>
-    );
-  };
-
-  const navItems = [
-    { path: "/", label: "Home", icon: Home },
-    { path: "/rooms", label: "Rooms", icon: Users },
-    {
-      path: "/settings/general",
-      label: userInfos?.firstName,
-      icon: AvatarComponent,
-    },
-  ];
+export default function MainLayout() {
+	const { user, logout } = useAuth();
 
   return (
-    <ScrollArea className="h-screen w-screen">
-      <nav className=" fixed top-0 left-0 w-full border-b bg-background/20 backdrop-blur-md  z-10">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          {/* Logo/Brand */}
-          <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <span className="text-sm font-bold">M</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight">MyApp</span>
-          </div>
+    <SidebarProvider>
+      <div className="flex h-screen w-full">
+        {/* === SIDEBAR === */}
+        <Sidebar className="bg-sky-900 text-white w-64">
+          {/* Header */}
+          <SidebarHeader className="p-5 bg-sky-950 text-4xl text-orange-500 font-semibold">
+            The Mind
+          </SidebarHeader>
 
-          {/* Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+					<SidebarContent className="flex-1 p-3 bg-sky-950">
+						<SidebarGroup>
+							<SidebarGroupLabel className="text-gray-300 mb-2">
+								Navigation
+							</SidebarGroupLabel>
 
-              return (
-                <Button
-                  key={item.path}
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  asChild
-                  className="h-9"
-                >
-                  <Link to={item.path} className="flex items-center gap-2">
-                    {item.label}
-                    <Icon className="h-4 w-4" />
+              <SidebarMenu>
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                  <Home className="w-4 h-4" />
+                  <Link to="/" className="w-full block">
+                    Accueil
                   </Link>
-                </Button>
-              );
-            })}
-            <Button variant="ghost" size="sm" onClick={logout} className="h-9">
-              Logout
-            </Button>
-          </div>
+                </SidebarMenuItem>
 
-          {/* Mobile Navigation */}
-          <div className="flex md:hidden">
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                  <BookText className="w-4 h-4" />
+                  <Link to="/rules" className="w-full block">
+                    Règles du jeu
+                  </Link>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                  <Gamepad2 className="w-4 h-4" />
+                  <Link to="/rooms" className="w-full block">
+                    Mes parties
+                  </Link>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+
+          {/* Pied de la sidebar */}
+          <SidebarFooter className="bg-sky-950 p-4">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-white hover:bg-orange-500"
+              onClick={logout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Se déconnecter
             </Button>
+          </SidebarFooter>
+        </Sidebar>
+
+        <SidebarInset className="flex bg-gradient-to-br from-sky-950 via-slate-950 to-sky-950 h-screen w-full">
+          {/* Navbar */}
+          <nav className="bg-sky-950 text-white w-full p-5 shadow-md">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1 bg-sky-950 hover:bg-orange-500" />
+              </div>
+              <NavigationMenu>
+                <h1 className="text-xl font-bold  text-white">
+                  Bonjour, {user.name} {/* TODO: Use state or context*/}
+                </h1>
+              </NavigationMenu>
+            </div>
+          </nav>
+          {/* === Contenu dynamique === */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <Outlet />
           </div>
-        </div>
-      </nav>
-      <div className="mt-16">
-        <Outlet />
+        </SidebarInset>
       </div>
-    </ScrollArea>
+    </SidebarProvider>
   );
-};
-
-export default MainLayout;
+}

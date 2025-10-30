@@ -40,6 +40,11 @@ const RoomCreate = ({ onSuccess }) => {
         $id: roomId,
         name: roomName,
         maxPlayers: parseInt(maxPlayers),
+        creatorId: user.$id,
+        gameStatus: "waiting",
+        currentLevel: 1,
+        playerIds: [user.$id], // Le créateur rejoint automatiquement
+        livesRemaining: 0,
       };
 
       await rooms.createRoom(newRoom);

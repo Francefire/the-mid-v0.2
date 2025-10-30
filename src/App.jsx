@@ -10,12 +10,14 @@ import { LayoutSettings } from "./app/settings/layout";
 import Signup from "./app/signup";
 import { LoggedRoutes } from "./components/loggedRoutes";
 import MainLayout from "./components/mainLayout";
+import Rules from "./app/rules";
 function App() {
   return (
     <Routes>
       <Route element={<LoggedRoutes />}>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/rules" element={<Rules />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/rooms/:id" element={<Room />} />
           <Route path="/profile/:id" element={<Profile />} />
