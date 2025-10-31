@@ -17,6 +17,6 @@ export default defineConfig({
     watch: {
       usePolling: true
     },
-    allowedHosts: "the-mind.toglabs.dev"
+    allowedHosts: ".toglabs.dev"
   }
 });
