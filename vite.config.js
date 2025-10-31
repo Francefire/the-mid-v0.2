@@ -13,10 +13,13 @@ export default defineConfig({
   },
   server : {
     port : 8888,
-    host : "0.0.0.0",
+    host : true,
     watch: {
       usePolling: true
     },
     allowedHosts: ".toglabs.dev"
+  },
+  preview : {
+    allowedHosts: true
   }
 });
