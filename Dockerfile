@@ -2,11 +2,13 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json ./
 
 RUN npm install
 
+COPY . .
+
 EXPOSE 8888
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host"]
 
