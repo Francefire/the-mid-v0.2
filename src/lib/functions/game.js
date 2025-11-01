@@ -1,5 +1,6 @@
 import { tablesDB } from "../appwrite";
 import { Query, ID } from "appwrite";
+import { config } from "../config";
 
 /**
  * Calcule le nombre de vies initial selon les règles officielles de The Mind
@@ -68,7 +69,7 @@ export const distributeCards = async (roomId, playerIds, level) => {
       
       // Vérifier si une main existe déjà pour ce joueur dans cette room
       const existingHands = await tablesDB.listRows({
-        databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+        databaseId: config.appwrite.databaseId,
         tableId: "hands",
         queries: [
           Query.equal("roomId", roomId),
@@ -79,7 +80,7 @@ export const distributeCards = async (roomId, playerIds, level) => {
       if (existingHands.rows && existingHands.rows.length > 0) {
         // Mettre à jour la main existante
         const updateResult = await tablesDB.updateRow({
-          databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+          databaseId: config.appwrite.databaseId,
           tableId: "hands",
           rowId: existingHands.rows[0].$id,
           data: { cards: playerCards },
@@ -88,7 +89,7 @@ export const distributeCards = async (roomId, playerIds, level) => {
       } else {
         // Créer une nouvelle main
         const createResult = await tablesDB.createRow({
-          databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+          databaseId: config.appwrite.databaseId,
           tableId: "hands",
           rowId: ID.unique(),
           data: {
@@ -128,7 +129,7 @@ export const initializeGame = async (roomId, playerIds) => {
     
     // Mettre à jour la room avec l'état initial du jeu
     const roomUpdate = await tablesDB.updateRow({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       rowId: roomId,
       data: {
@@ -165,7 +166,7 @@ export const startNewLevel = async (roomId) => {
   try {
     // Récupérer les infos de la room
     const roomData = await tablesDB.listRows({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       queries: [Query.equal("$id", roomId)],
     });
@@ -180,7 +181,7 @@ export const startNewLevel = async (roomId) => {
     if (newLevel > 12) {
       // Le jeu est gagné !
       await tablesDB.updateRow({
-        databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+        databaseId: config.appwrite.databaseId,
         tableId: "rooms",
         rowId: roomId,
         data: { gameStatus: "won" },
@@ -207,7 +208,7 @@ export const startNewLevel = async (roomId) => {
     
     // Mettre à jour le niveau et les étoiles
     await tablesDB.updateRow({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       rowId: roomId,
       data: {
@@ -277,7 +278,7 @@ export const loseLife = async (roomId) => {
   try {
     // Récupérer les infos de la room
     const roomData = await tablesDB.listRows({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       queries: [Query.equal("$id", roomId)],
     });
@@ -292,7 +293,7 @@ export const loseLife = async (roomId) => {
     
     // Mettre à jour la room
     await tablesDB.updateRow({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       rowId: roomId,
       data: {
@@ -329,7 +330,7 @@ export const useThrowingStar = async (roomId) => {
   try {
     // Récupérer les infos de la room
     const roomData = await tablesDB.listRows({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       queries: [Query.equal("$id", roomId)],
     });
@@ -346,7 +347,7 @@ export const useThrowingStar = async (roomId) => {
     
     // Récupérer toutes les mains
     const handsData = await tablesDB.listRows({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "hands",
       queries: [Query.equal("roomId", roomId)],
     });
@@ -360,7 +361,7 @@ export const useThrowingStar = async (roomId) => {
         const newCards = hand.cards.filter(card => card !== lowestCard);
         
         await tablesDB.updateRow({
-          databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+          databaseId: config.appwrite.databaseId,
           tableId: "hands",
           rowId: hand.$id,
           data: { cards: newCards },
@@ -372,7 +373,7 @@ export const useThrowingStar = async (roomId) => {
     
     // Décrémenter les étoiles
     await tablesDB.updateRow({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "rooms",
       rowId: roomId,
       data: { throwingStars: room.throwingStars - 1 },
@@ -404,7 +405,7 @@ export const checkLevelCompletion = async (roomId) => {
   try {
     // Récupérer toutes les mains
     const handsData = await tablesDB.listRows({
-      databaseId: import.meta.env.VITE_APPWRITE_DB_ID,
+      databaseId: config.appwrite.databaseId,
       tableId: "hands",
       queries: [Query.equal("roomId", roomId)],
     });
