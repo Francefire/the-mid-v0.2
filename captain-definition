@@ -1,4 +1,10 @@
 {
     "schemaVersion" : 2,
-    "dockerfilePath" : "./Dockerfile"
+    "dockerfilePath" : "./Dockerfile",
+    "buildArgs": {
+        "VITE_APPWRITE_PROJECT_ID": "$$cap_VITE_APPWRITE_PROJECT_ID",
+        "VITE_APPWRITE_PROJECT_NAME": "$$cap_VITE_APPWRITE_PROJECT_NAME",
+        "VITE_APPWRITE_ENDPOINT": "$$cap_VITE_APPWRITE_ENDPOINT",
+        "VITE_APPWRITE_DB_ID": "$$cap_VITE_APPWRITE_DB_ID"
+    }
 }
