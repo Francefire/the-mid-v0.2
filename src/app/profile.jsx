@@ -1,4 +1,5 @@
 import { client, tablesDB } from "@/lib/appwrite";
+import { config } from "@/lib/config";
 import React, { useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
@@ -7,9 +8,7 @@ export const Profile = () => {
   useEffect(() => {
     const unsub = client.subscribe(
       [
-        `databases.${
-          import.meta.env.VITE_APPWRITE_DB_ID
-        }.tables.profiledetails.rows`,
+        `databases.${config.appwrite.databaseId}.tables.profiledetails.rows`,
       ],
       (response) => {
         console.log(response);

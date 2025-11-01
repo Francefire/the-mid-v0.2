@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/lib/appwrite";
+import { config } from "@/lib/config";
 
 export const Room = () => {
   const { id } = useParams();
@@ -106,9 +107,7 @@ export const Room = () => {
     // S'abonner aux changements de la room
     const unsub = client.subscribe(
       [
-        `databases.${
-          import.meta.env.VITE_APPWRITE_DB_ID
-        }.tables.rooms.rows.${id}`,
+        `databases.${config.appwrite.databaseId}.tables.rooms.rows.${id}`,
       ],
       (response) => {
         const updatedRoom = response.payload;
@@ -123,9 +122,7 @@ export const Room = () => {
     // S'abonner aux changements des mains pour recharger automatiquement
     const unsubHands = client.subscribe(
       [
-        `databases.${
-          import.meta.env.VITE_APPWRITE_DB_ID
-        }.tables.hands.rows`,
+        `databases.${config.appwrite.databaseId}.tables.hands.rows`,
       ],
       (response) => {
         // Recharger la main si c'est celle du joueur actuel
