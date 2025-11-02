@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/lib/appwrite";
 import { config } from "@/lib/config";
+import { Hourglass } from "lucide-react";
 
 export const Room = () => {
   const { id } = useParams();
@@ -142,6 +143,7 @@ export const Room = () => {
           response.payload.roomId === id
         ) {
           setHand(response.payload);
+          loadPlayers(roomData.playerIds); //Recharge les joueurs en refetchant, peut etre changer plus tard
         }
       }
     );
@@ -270,7 +272,14 @@ export const Room = () => {
                 </CardHeader>
                 <CardContent>
                   {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
-                  <div className="gap-2 justify-center flex flex-row items-center">
+                  {player.cardsLeftCount === 0 && (
+                    <div
+                          className="w-10 h-14 bg-brand-muted text-2xl text-brand font-extrabold rounded-lg shadow-lg flex items-center justify-center"
+                        >
+                          <Hourglass />
+                        </div>
+                  )}
+                  <div className="gap-2 justify-center flex flex-row items">
                     {Array.from({ length: player?.cardsLeftCount || 0 }).map(
                       (_, i) => (
                         <div
