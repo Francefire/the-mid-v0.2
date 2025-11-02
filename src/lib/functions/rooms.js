@@ -31,12 +31,13 @@ export const rooms = {
       queries: [Query.equal("roomId", roomId), Query.equal("userId", userId)],
     });
   },
+  // Met à jour la main d'un joueur lorsqu'il joue une carte, l'ajoute dans son historique de carte jouée et met à jour la dernière carte jouée dans la room
   playCard: async (id, newHand, card, roomId) => {
     const response = await tablesDB.updateRow({
       databaseId: config.appwrite.databaseId,
       tableId: "hands",
       rowId: id,
-      data: { cards: newHand.cards },
+      data: { cards: newHand.cards, cardsPlayed: [...(newHand.cardsPlayed || []), card] },
     });
     if (response) {
       const res = await tablesDB.updateRow({
@@ -82,6 +83,13 @@ export const rooms = {
       tableId: "rooms",
       rowId: roomId,
       data: { playerIds: updatedPlayerIds },
+    });
+  },
+  deleteRoom: async (roomId) => {
+    return await tablesDB.deleteRow({
+      databaseId: config.appwrite.databaseId,
+      tableId: "rooms",
+      rowId: roomId,
     });
   },
 };

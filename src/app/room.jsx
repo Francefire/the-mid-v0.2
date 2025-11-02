@@ -6,7 +6,14 @@ import { game } from "@/lib/functions/game";
 import { profile } from "@/lib/functions/profile";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/lib/appwrite";
@@ -30,35 +37,41 @@ export const Room = () => {
         console.error("Erreur lors de la connexion à la room:", error);
       }
     };
-    
+
     joinRoomOnLoad();
   }, [id, user.$id]);
 
   // Fonction pour charger les informations des joueurs
   const loadPlayers = async (playerIds) => {
     if (!playerIds || playerIds.length === 0) return;
-    
+
     try {
       const playerProfiles = await Promise.all(
         playerIds.map(async (playerId) => {
           try {
             const profileData = await profile.getProfile(playerId);
-            return profileData || { $id: playerId, firstName: "Joueur", lastName: "" };
-          } catch {
+            const handData = await rooms.getHand(id, playerId); // TODO : Maybe optimize in a single query
+            return {
+              ...profileData,
+              cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
+              cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
+            };
+          } catch (err) {
+            console.error("Erreur lors du chargement de la main:", err);
             return { $id: playerId, firstName: "Joueur", lastName: "" };
           }
         })
       );
       setPlayers(playerProfiles);
     } catch (error) {
-      console.error("Erreur lors du chargement des joueurs:", error);
+      console.error("Erreur lors du chargement des joueurs:");
     }
   };
 
   // Démarrer la partie
   const handleStartGame = async () => {
     if (!roomData || roomData.gameStatus !== "waiting") return;
-    
+
     setIsStarting(true);
     try {
       await game.initializeGame(id, roomData.playerIds);
@@ -76,12 +89,12 @@ export const Room = () => {
     setHand((prev) => {
       const newHand = { ...prev, cards: prev.cards.filter((c) => c !== card) };
       rooms.playCard(hand.$id, newHand, card, id);
-      
+
       // Vérifier si le niveau est terminé après avoir joué
       setTimeout(() => {
         game.checkLevelCompletion(id);
       }, 500);
-      
+
       return newHand;
     });
   }
@@ -95,20 +108,20 @@ export const Room = () => {
     });
 
     // Charger les infos de la room
-    rooms.getRoom(id).then((response) => {
-      if (response.rows && response.rows.length > 0) {
-        const room = response.rows[0];
-        setRoomData(room);
-        setLastRoomPlayedCard(room.lastPlayed);
-        loadPlayers(room.playerIds);
+    rooms.getRoom(id).then(
+      (response) => {
+        if (response.rows && response.rows.length > 0) {
+          const room = response.rows[0];
+          setRoomData(room);
+          setLastRoomPlayedCard(room.lastPlayed);
+          loadPlayers(room.playerIds);
+        }
       }
-    });
+    );
 
     // S'abonner aux changements de la room
     const unsub = client.subscribe(
-      [
-        `databases.${config.appwrite.databaseId}.tables.rooms.rows.${id}`,
-      ],
+      [`databases.${config.appwrite.databaseId}.tables.rooms.rows.${id}`],
       (response) => {
         const updatedRoom = response.payload;
         setRoomData(updatedRoom);
@@ -119,14 +132,15 @@ export const Room = () => {
       }
     );
 
-    // S'abonner aux changements des mains pour recharger automatiquement
+    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains filtré par roomId correspondant
     const unsubHands = client.subscribe(
-      [
-        `databases.${config.appwrite.databaseId}.tables.hands.rows`,
-      ],
+      [`databases.${config.appwrite.databaseId}.tables.hands.rows`],
       (response) => {
         // Recharger la main si c'est celle du joueur actuel
-        if (response.payload.userId === user.$id && response.payload.roomId === id) {
+        if (
+          response.payload.userId === user.$id &&
+          response.payload.roomId === id
+        ) {
           setHand(response.payload);
         }
       }
@@ -139,7 +153,8 @@ export const Room = () => {
   }, [id, user.$id]);
 
   const isCreator = roomData && roomData.creatorId === user.$id;
-  const canStartGame = isCreator && roomData?.gameStatus === "waiting" && players.length >= 2;
+  const canStartGame =
+    isCreator && roomData?.gameStatus === "waiting" && players.length >= 2;
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -156,7 +171,9 @@ export const Room = () => {
                 <Badge variant="default">En cours</Badge>
               )}
               {roomData?.gameStatus === "won" && (
-                <Badge variant="success" className="bg-green-600">Gagné !</Badge>
+                <Badge variant="success" className="bg-green-600">
+                  Gagné !
+                </Badge>
               )}
               {roomData?.gameStatus === "lost" && (
                 <Badge variant="destructive">Perdu</Badge>
@@ -175,7 +192,9 @@ export const Room = () => {
                 </div>
                 <div>
                   <span className="font-semibold">Vies:</span>{" "}
-                  <Badge variant="destructive">❤️ {roomData.livesRemaining}</Badge>
+                  <Badge variant="secondary">
+                    ❤️ {roomData.livesRemaining}
+                  </Badge>
                 </div>
                 <div>
                   <span className="font-semibold">Étoiles:</span>{" "}
@@ -224,6 +243,49 @@ export const Room = () => {
       {roomData?.gameStatus === "playing" && (
         <>
           <Separator />
+          <Card
+            className={"flex flex-row justify-evenly items-center p-4 gap-4"}
+          >
+            {/* Les joueurs et leur derniere carte respective, une card par joueur*/}
+            {players.map((player, index) => (
+              <Card
+                key={index}
+                className={"bg-accent flex-row items-center grow"}
+              >
+                <CardHeader className={"grow"}>
+                  <CardTitle className="text-xs">
+                    {player?.firstName} {player?.lastName}
+                  </CardTitle>
+                  {/* CardAction removed as it was empty */}
+                  <CardDescription className="text-xs text-background">
+                    Dernière carte :{" "}
+                    {player?.cardsPlayed && player.cardsPlayed.length > 0 ? (
+                      player.cardsPlayed[0]
+                    ) : (
+                      <span className="text-muted-foreground">
+                        Aucune carte jouée
+                      </span>
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
+                  <div className="gap-2 justify-center flex flex-row items-center">
+                    {Array.from({ length: player?.cardsLeftCount || 0 }).map(
+                      (_, i) => (
+                        <div
+                          key={i}
+                          className="w-10 h-14 bg-background text-2xl text-muted-foreground font-extrabold rounded-lg shadow-lg flex items-center justify-center"
+                        >
+                          ?
+                        </div>
+                      )
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </Card>
 
           {/* Dernière carte jouée */}
           <Card>
@@ -246,7 +308,9 @@ export const Room = () => {
           {/* Main du joueur */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Ma main ({hand?.cards?.length || 0} cartes)</CardTitle>
+              <CardTitle className="text-lg">
+                Ma main ({hand?.cards?.length || 0} cartes)
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3 justify-center">
