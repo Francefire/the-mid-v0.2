@@ -149,6 +149,7 @@ export const Room = () => {
           response.payload.roomId === id
         ) {
           setHand(response.payload);
+          loadPlayers(roomData.playerIds); //Recharge les joueurs en refetchant, peut etre changer plus tard
         }
       }
     );
@@ -276,7 +277,6 @@ export const Room = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {/* TODO : Maybe try to update that when player.cardsLeftCount changes cause right now we only get updated when we play or refresh page */}
                   {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
                   {player.cardsLeftCount === 0 && (
                     <div
