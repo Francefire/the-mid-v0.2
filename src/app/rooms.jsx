@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { rooms } from "@/lib/functions/rooms";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
+import { rooms } from "@/lib/functions/rooms";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import RoomCreate from "./roomCreate";
 
 export const Rooms = () => {
@@ -36,15 +35,16 @@ export const Rooms = () => {
 
   return (
     <div>
-      <div>
-        <h1 className="text-2xl font-bold p-10">Create a room :</h1>
+      <div className="flex gap-4">
+        <h1 className="text-2xl font-bold">Créer une room :</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              <span className="text-sm">Create Room</span>
+                <Plus/>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogTitle>Nouvelle room</DialogTitle>
             <RoomCreate onSuccess={handleRoomCreated} />
           </DialogContent>
         </Dialog>
@@ -54,9 +54,14 @@ export const Rooms = () => {
         {roomList.map((room) => (
           <div
             key={room.$id}
-            className="bg-gray-100 rounded-md p-2 flex flex-col gap-2 justify-between"
+            className="bg-muted rounded-md p-4 flex flex-col gap-4 justify-between"
           >
+            <div className="flex flex-row justify-between items-center">
             <div className="text-lg font-bold">{room.name}</div>
+            <div className="font-bold text-muted-foreground">
+              {room.playerIds.length}/{room.maxPlayers}
+              </div>
+            </div>
             <Button asChild>
               <Link to={`/rooms/${room.$id}`}>
                 <span className="text-sm">Join</span>

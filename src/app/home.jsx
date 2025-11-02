@@ -18,7 +18,7 @@ export function Home() {
           className="text-6xl text-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)] mb-12"
         >
           Bienvenue dans{" "}
-          <span className="text-orange-400 drop-shadow-[0_0_25px_rgba(251,146,60,0.8)]">
+          <span className="text-brand drop-shadow-[0_0_25px_oklch(0.68_0.19_35/0.8)]">
             The Mind
           </span>
         </motion.h1>
@@ -27,16 +27,16 @@ export function Home() {
             onClick={() => navigate("/rooms")}
             whileHover={{
               scale: 1.1,
-              boxShadow: "0 0 60px rgba(251,146,60,0.9)",
+              boxShadow: "0 0 60px oklch(0.68 0.19 35 / 0.9)",
             }}
             whileTap={{ scale: 0.95 }}
-            className="relative flex items-center justify-center gap-5 px-20 py-10 text-4xl font-bold text-white rounded-full 
-                       bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400
-                       shadow-[0_0_60px_rgba(251,146,60,0.5)] transition-all duration-300 overflow-hidden"
+            className="relative flex items-center justify-center gap-5 px-20 py-10 text-4xl font-bold text-brand-foreground rounded-full 
+                       bg-brand
+                       shadow-[0_0_60px_oklch(0.68_0.19_35/0.5)] transition-all duration-300 overflow-hidden"
           >
             {/* halo d’énergie */}
             <motion.div
-              className="absolute justify-center inset-0 rounded-full bg-orange-400 blur-3xl opacity-40"
+              className="absolute justify-center inset-0 rounded-full bg-brand blur-3xl opacity-40"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.3, 0.6, 0.3],

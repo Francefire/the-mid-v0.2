@@ -11,6 +11,7 @@ import Signup from "./app/signup";
 import { LoggedRoutes } from "./components/loggedRoutes";
 import MainLayout from "./components/mainLayout";
 import Rules from "./app/rules";
+import Palette from "./app/palette";
 function App() {
   return (
     <Routes>
@@ -18,6 +19,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/rules" element={<Rules />} />
+          <Route path="/palette" element={<Palette />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/rooms/:id" element={<Room />} />
           <Route path="/profile/:id" element={<Profile />} />

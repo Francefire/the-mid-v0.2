@@ -6,26 +6,26 @@ export default function Rules() {
       <Card className="flex-1 bg-gray-100">
         <CardContent className="bg-gray-100 text-black p-8 overflow-y-auto">
           <main className="flex flex-col items-start justify-start flex-1">
-            <h1 className="text-4xl font-bold mb-6 text-orange-900">
+            <h1 className="text-4xl font-bold mb-6 text-brand">
               Les règles du jeu{" "}
-              <span className="text-orange-700">The Mind</span>
+              <span className="text-brand">The Mind</span>
             </h1>
 
             {/* === GAME INFO === */}
             <section className="flex flex-wrap gap-4 mb-8 text-sky-900 text-base font-medium">
-              <div className="bg-orange-100 rounded px-3 py-1 shadow-sm">
+              <div className="bg-brand-muted rounded px-3 py-1 shadow-sm">
                 Langue : Français
               </div>
-              <div className="bg-orange-100 rounded px-3 py-1 shadow-sm">
+              <div className="bg-brand-muted rounded px-3 py-1 shadow-sm">
                 2-4 joueurs
               </div>
-              <div className="bg-orange-100 rounded px-3 py-1 shadow-sm">
+              <div className="bg-brand-muted rounded px-3 py-1 shadow-sm">
                 Durée ≈ 20 min
               </div>
-              <div className="bg-orange-100 rounded px-3 py-1 shadow-sm">
+              <div className="bg-brand-muted rounded px-3 py-1 shadow-sm">
                 Âge 8+
               </div>
-              <div className="bg-orange-100 rounded px-3 py-1 shadow-sm">
+              <div className="bg-brand-muted rounded px-3 py-1 shadow-sm">
                 Style : Déduction, Coopératif
               </div>
             </section>
@@ -53,11 +53,11 @@ export default function Rules() {
                 offre.
               </p>
 
-              <h2 className="text-2xl font-semibold text-orange-800 mt-8">
+              <h2 className="text-2xl font-semibold text-brand mt-8">
                 🎯 Comment ça se joue ?
               </h2>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-4">
+              <h3 className="text-xl font-semibold text-brand mt-4">
                 Le but du jeu
               </h3>
               <p>
@@ -76,7 +76,7 @@ export default function Rules() {
                 votre score précédent !
               </p>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-6">
+              <h3 className="text-xl font-semibold text-brand mt-6">
                 Le tour de jeu
               </h3>
               <p>
@@ -94,7 +94,7 @@ export default function Rules() {
                 ressentir le bon moment pour jouer votre carte.
               </p>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-6">
+              <h3 className="text-xl font-semibold text-brand mt-6">
                 Quand un niveau se termine ?
               </h3>
               <p>
@@ -102,7 +102,7 @@ export default function Rules() {
                 Prenez la récompense du niveau, puis commencez le suivant.
               </p>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-6">
+              <h3 className="text-xl font-semibold text-brand mt-6">
                 Mince ! Je me suis trompé !
               </h3>
               <p>
@@ -112,7 +112,7 @@ export default function Rules() {
                 cartes restantes.
               </p>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-6">
+              <h3 className="text-xl font-semibold text-brand mt-6">
                 Et les Etoiles ?
               </h3>
               <p>
@@ -122,7 +122,7 @@ export default function Rules() {
                 aide à débloquer des situations tendues.
               </p>
 
-              <h3 className="text-xl font-semibold text-orange-700 mt-6">
+              <h3 className="text-xl font-semibold text-brand mt-6">
                 Fin du jeu
               </h3>
               <p>

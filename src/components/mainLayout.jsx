@@ -26,34 +26,34 @@ export default function MainLayout() {
     <SidebarProvider>
       <div className="flex h-screen w-full">
         {/* === SIDEBAR === */}
-        <Sidebar className="bg-sky-900 text-white w-64">
+        <Sidebar className="bg-sidebar text-sidebar-foreground w-64">
           {/* Header */}
-          <SidebarHeader className="p-5 bg-sky-950 text-4xl text-orange-500 font-semibold">
+          <SidebarHeader className="p-5 text-4xl text-brand font-semibold">
             The Mind
           </SidebarHeader>
 
-					<SidebarContent className="flex-1 p-3 bg-sky-950">
+					<SidebarContent className="flex-1 p-3">
 						<SidebarGroup>
-							<SidebarGroupLabel className="text-gray-300 mb-2">
+							<SidebarGroupLabel className="text-muted-foreground mb-2">
 								Navigation
 							</SidebarGroupLabel>
 
               <SidebarMenu>
-                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-brand">
                   <Home className="w-4 h-4" />
                   <Link to="/" className="w-full block">
                     Accueil
                   </Link>
                 </SidebarMenuItem>
 
-                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-brand">
                   <BookText className="w-4 h-4" />
                   <Link to="/rules" className="w-full block">
                     Règles du jeu
                   </Link>
                 </SidebarMenuItem>
 
-                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-orange-500">
+                <SidebarMenuItem className="flex items-center gap-2 p-2 rounded-md hover:bg-brand">
                   <Gamepad2 className="w-4 h-4" />
                   <Link to="/rooms" className="w-full block">
                     Mes parties
@@ -64,10 +64,10 @@ export default function MainLayout() {
           </SidebarContent>
 
           {/* Pied de la sidebar */}
-          <SidebarFooter className="bg-sky-950 p-4">
+          <SidebarFooter className="p-4">
             <Button
               variant="ghost"
-              className="w-full justify-start text-white hover:bg-orange-500"
+              className="w-full justify-start text-sidebar-foreground hover:bg-brand"
               onClick={logout}
             >
               <LogOut className="mr-2 h-4 w-4" />
@@ -76,16 +76,16 @@ export default function MainLayout() {
           </SidebarFooter>
         </Sidebar>
 
-        <SidebarInset className="flex bg-gradient-to-br from-sky-950 via-slate-950 to-sky-950 h-screen w-full">
+        <SidebarInset className="flex bg-gradient-to-br from-gradient-light via-background to-gradient-light h-screen w-full">
           {/* Navbar */}
-          <nav className="bg-sky-950 text-white w-full p-5 shadow-md">
+          <nav className="text-foreground w-full p-5 shadow-md">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <SidebarTrigger className="-ml-1 bg-sky-950 hover:bg-orange-500" />
+                <SidebarTrigger className="-ml-1 hover:bg-brand" />
               </div>
               <NavigationMenu>
-                <h1 className="text-xl font-bold  text-white">
-                  Bonjour, {user.name} {/* TODO: Use state or context*/}
+                <h1 className="text-xl font-bold text-foreground">
+                  Bonjour, {user.name}
                 </h1>
               </NavigationMenu>
             </div>

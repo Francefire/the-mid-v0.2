@@ -106,7 +106,7 @@ const RoomCreate = ({ onSuccess }) => {
               </Field>
 
               {error && (
-                <div className="text-red-500 text-sm text-center">
+                <div className="text-destructive text-sm text-center">
                   {error}
                 </div>
               )}
