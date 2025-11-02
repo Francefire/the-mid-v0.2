@@ -259,7 +259,7 @@ export const Room = () => {
                   {/* CardAction removed as it was empty */}
                   <CardDescription className="text-xs text-background">
                     Dernière carte :{" "}
-                    {player?.cardsPlayed ? (
+                    {player?.cardsPlayed && player.cardsPlayed.length > 0 ? (
                       player.cardsPlayed[0]
                     ) : (
                       <span className="text-muted-foreground">
