@@ -31,7 +31,7 @@ export const rooms = {
       queries: [Query.equal("roomId", roomId), Query.equal("userId", userId)],
     });
   },
-  // Met à jour la main d'un joueur lorsqu'il joue une carte, l'ajoute dans son historique de carte joué et met à jour la dernière carte jouée dans la room
+  // Met à jour la main d'un joueur lorsqu'il joue une carte, l'ajoute dans son historique de carte jouée et met à jour la dernière carte jouée dans la room
   playCard: async (id, newHand, card, roomId) => {
     const response = await tablesDB.updateRow({
       databaseId: config.appwrite.databaseId,
