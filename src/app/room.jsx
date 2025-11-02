@@ -56,7 +56,7 @@ export const Room = () => {
               cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
               cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
             };
-          } catch(err) {
+          } catch (err) {
             console.error("Erreur lors du chargement de la main:", err);
             return { $id: playerId, firstName: "Joueur", lastName: "" };
           }
