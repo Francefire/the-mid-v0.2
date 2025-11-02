@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/login-form";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/authContext";
+import sideBg from "@/assets/login-side-background.jpg";
 export default function Login() {
   const { user } = useAuth();
 
@@ -17,10 +18,16 @@ export default function Login() {
       </div>
       <div className="bg-muted relative hidden lg:block">
         <img
-          src="https://m.media-amazon.com/images/I/511-DNZiXcL._UF894,1000_QL80_.jpg"
+          src={sideBg}
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
+        {/* Watermark texte "The Mind" */}
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <span className="select-none font-black tracking-tight text-foreground/15 text-[clamp(3rem,12vw,12rem)] drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
+            The Mind
+          </span>
+        </div>
       </div>
     </div>
   );

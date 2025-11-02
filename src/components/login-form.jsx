@@ -17,6 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useAuth } from "@/context/authContext";
+import { Link } from "react-router-dom";
+
 
 export function LoginForm({ className, ...props }) {
   const { login } = useAuth();
@@ -60,7 +62,7 @@ export function LoginForm({ className, ...props }) {
               <Field>
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">cry</a>
+                  Don&apos;t have an account? <Link to="/signup">Signup</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
