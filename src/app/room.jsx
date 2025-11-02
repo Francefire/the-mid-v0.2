@@ -256,7 +256,7 @@ export const Room = () => {
                   <CardTitle className="text-xs">
                     {player?.firstName} {player?.lastName}
                   </CardTitle>
-                  <CardAction></CardAction>
+                  {/* CardAction removed as it was empty */}
                   <CardDescription className="text-xs text-background">
                     Dernière carte :{" "}
                     {player?.cardsPlayed ? (
