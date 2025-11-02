@@ -27,7 +27,7 @@ export const Rooms = () => {
   }, []);
 
   useEffect(() => {
-    // Abonnement aux changements dans la collection "rooms" si c'est un delete ou un ajout gerer differemment
+    // Abonnement aux changements dans la collection "rooms" si c'est un delete ou un ajout gérer différemment
     const unsub = client.subscribe(
       [`databases.${config.appwrite.databaseId}.collections.rooms.documents`],
       (response) => {
@@ -37,7 +37,7 @@ export const Rooms = () => {
     return () => {
       unsub();
     };
-  });
+  }, []);
 
   const handleRoomCreated = () => {
     setIsDialogOpen(false);

@@ -52,18 +52,12 @@ export const Room = () => {
           try {
             const profileData = await profile.getProfile(playerId);
             const handData = await rooms.getHand(id, playerId); // TODO : Maybe optimize in a single query
-            return (
-              {
-                ...profileData,
-                cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
-                cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
-              } || {
-                $id: playerId,
-                firstName: "Joueur",
-                lastName: "",
-              }
-            );
-          } catch(err) {
+            return {
+              ...profileData,
+              cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
+              cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
+            };
+          } catch (err) {
             console.error("Erreur lors du chargement de la main:", err);
             return { $id: playerId, firstName: "Joueur", lastName: "" };
           }
@@ -139,7 +133,7 @@ export const Room = () => {
       }
     );
 
-    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains avec cette roomId en roomId row
+    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains filtré par roomId correspondant
     const unsubHands = client.subscribe(
       [`databases.${config.appwrite.databaseId}.tables.hands.rows`],
       (response) => {
@@ -264,10 +258,10 @@ export const Room = () => {
                   <CardTitle className="text-xs">
                     {player?.firstName} {player?.lastName}
                   </CardTitle>
-                  <CardAction></CardAction>
+                  {/* CardAction removed as it was empty */}
                   <CardDescription className="text-xs text-background">
                     Dernière carte :{" "}
-                    {player?.cardsPlayed ? (
+                    {player?.cardsPlayed && player.cardsPlayed.length > 0 ? (
                       player.cardsPlayed[0]
                     ) : (
                       <span className="text-muted-foreground">
