@@ -132,7 +132,7 @@ export const Room = () => {
       }
     );
 
-    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains avec cette roomId en roomId row
+    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains filtré par roomId correspondant
     const unsubHands = client.subscribe(
       [`databases.${config.appwrite.databaseId}.tables.hands.rows`],
       (response) => {
