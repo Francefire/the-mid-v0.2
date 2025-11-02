@@ -270,7 +270,7 @@ export const Room = () => {
                 </CardHeader>
                 <CardContent>
                   {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
-                  <div className="gap-2 justify-center flex flex-row items">
+                  <div className="gap-2 justify-center flex flex-row items-center">
                     {Array.from({ length: player?.cardsLeftCount || 0 }).map(
                       (_, i) => (
                         <div
