@@ -51,17 +51,11 @@ export const Room = () => {
           try {
             const profileData = await profile.getProfile(playerId);
             const handData = await rooms.getHand(id, playerId); // TODO : Maybe optimize in a single query
-            return (
-              {
-                ...profileData,
-                cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
-                cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
-              } || {
-                $id: playerId,
-                firstName: "Joueur",
-                lastName: "",
-              }
-            );
+            return {
+              ...profileData,
+              cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
+              cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
+            };
           } catch(err) {
             console.error("Erreur lors du chargement de la main:", err);
             return { $id: playerId, firstName: "Joueur", lastName: "" };
