@@ -85,4 +85,11 @@ export const rooms = {
       data: { playerIds: updatedPlayerIds },
     });
   },
+  deleteRoom: async (roomId) => {
+    return await tablesDB.deleteRow({
+      databaseId: config.appwrite.databaseId,
+      tableId: "rooms",
+      rowId: roomId,
+    });
+  },
 };

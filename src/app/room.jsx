@@ -6,7 +6,14 @@ import { game } from "@/lib/functions/game";
 import { profile } from "@/lib/functions/profile";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/lib/appwrite";
@@ -43,30 +50,27 @@ export const Room = () => {
         playerIds.map(async (playerId) => {
           try {
             const profileData = await profile.getProfile(playerId);
-            const handData = await rooms.getHand(id, playerId);// TODO : Maybe optimize in a single query
+            const handData = await rooms.getHand(id, playerId); // TODO : Maybe optimize in a single query
             return (
               {
-
-                ...profileData, 
-                cardsPlayed : handData.rows[0].cardsPlayed, 
-                cardsLeftCount : handData.rows[0].cards.length
-
+                ...profileData,
+                cardsPlayed: handData.rows.length ? handData.rows[0].cardsPlayed : [],
+                cardsLeftCount: handData.rows.length ? handData.rows[0].cards.length : 0,
               } || {
-
                 $id: playerId,
                 firstName: "Joueur",
                 lastName: "",
               }
             );
-          } catch {
+          } catch(err) {
+            console.error("Erreur lors du chargement de la main:", err);
             return { $id: playerId, firstName: "Joueur", lastName: "" };
           }
         })
       );
-      console.log(playerProfiles)
       setPlayers(playerProfiles);
     } catch (error) {
-      console.error("Erreur lors du chargement des joueurs:", error);
+      console.error("Erreur lors du chargement des joueurs:");
     }
   };
 
@@ -110,14 +114,16 @@ export const Room = () => {
     });
 
     // Charger les infos de la room
-    rooms.getRoom(id).then((response) => {
-      if (response.rows && response.rows.length > 0) {
-        const room = response.rows[0];
-        setRoomData(room);
-        setLastRoomPlayedCard(room.lastPlayed);
-        loadPlayers(room.playerIds);
+    rooms.getRoom(id).then(
+      (response) => {
+        if (response.rows && response.rows.length > 0) {
+          const room = response.rows[0];
+          setRoomData(room);
+          setLastRoomPlayedCard(room.lastPlayed);
+          loadPlayers(room.playerIds);
+        }
       }
-    });
+    );
 
     // S'abonner aux changements de la room
     const unsub = client.subscribe(
@@ -132,7 +138,7 @@ export const Room = () => {
       }
     );
 
-    // S'abonner aux changements des mains pour recharger automatiquement
+    // S'abonner aux changements des mains pour recharger automatiquement TODO : S'abonner uniquement aux mains avec cette roomId en roomId row
     const unsubHands = client.subscribe(
       [`databases.${config.appwrite.databaseId}.tables.hands.rows`],
       (response) => {
@@ -243,28 +249,48 @@ export const Room = () => {
       {roomData?.gameStatus === "playing" && (
         <>
           <Separator />
-          <Card className={"flex flex-row justify-evenly items-center p-4 gap-4"}>
-
-          {/* Les joueurs et leur derniere carte respective, une card par joueur*/}
-          {players.map((player, index) => (
-              <Card key={index} className={"bg-accent flex-row items-center grow"}>
+          <Card
+            className={"flex flex-row justify-evenly items-center p-4 gap-4"}
+          >
+            {/* Les joueurs et leur derniere carte respective, une card par joueur*/}
+            {players.map((player, index) => (
+              <Card
+                key={index}
+                className={"bg-accent flex-row items-center grow"}
+              >
                 <CardHeader className={"grow"}>
-                  <CardTitle className="text-xs">{player?.firstName} {player?.lastName}</CardTitle>
+                  <CardTitle className="text-xs">
+                    {player?.firstName} {player?.lastName}
+                  </CardTitle>
                   <CardAction></CardAction>
-                  <CardDescription className="text-xs text-background">Dernière carte : {player?.cardsPlayed ? player.cardsPlayed[0] : <span className="text-muted-foreground">Aucune carte jouée</span>}</CardDescription>
+                  <CardDescription className="text-xs text-background">
+                    Dernière carte :{" "}
+                    {player?.cardsPlayed ? (
+                      player.cardsPlayed[0]
+                    ) : (
+                      <span className="text-muted-foreground">
+                        Aucune carte jouée
+                      </span>
+                    )}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
                   <div className="gap-2 justify-center flex flex-row items">
-                    {Array.from({ length: player?.cardsLeftCount || 0 }).map((_, i) => (
-                      <div key={i} className="w-10 h-14 bg-background text-2xl text-muted-foreground font-extrabold rounded-lg shadow-lg flex items-center justify-center">
-                        ?
-                      </div>
-                    ))}
+                    {Array.from({ length: player?.cardsLeftCount || 0 }).map(
+                      (_, i) => (
+                        <div
+                          key={i}
+                          className="w-10 h-14 bg-background text-2xl text-muted-foreground font-extrabold rounded-lg shadow-lg flex items-center justify-center"
+                        >
+                          ?
+                        </div>
+                      )
+                    )}
                   </div>
                 </CardContent>
               </Card>
-          ))}
+            ))}
           </Card>
 
           {/* Dernière carte jouée */}
