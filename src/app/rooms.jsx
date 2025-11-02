@@ -37,7 +37,7 @@ export const Rooms = () => {
     return () => {
       unsub();
     };
-  });
+  }, []);
 
   const handleRoomCreated = () => {
     setIsDialogOpen(false);
