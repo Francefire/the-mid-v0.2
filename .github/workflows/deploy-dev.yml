@@ -3,7 +3,6 @@ name: Build and Deploy BETA Docker Image
 on:
   pull_request:
     branches:
-      - dev
       - main
 
 jobs:
