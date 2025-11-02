@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/lib/appwrite";
 import { config } from "@/lib/config";
+import { Hourglass } from "lucide-react";
 
 export const Room = () => {
   const { id } = useParams();
@@ -275,7 +276,15 @@ export const Room = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {/* TODO : Maybe try to update that when player.cardsLeftCount changes cause right now we only get updated when we play or refresh page */}
                   {/* Afficher des cartes face caché du nombre de carte restante du joueur */}
+                  {player.cardsLeftCount === 0 && (
+                    <div
+                          className="w-10 h-14 bg-brand-muted text-2xl text-brand font-extrabold rounded-lg shadow-lg flex items-center justify-center"
+                        >
+                          <Hourglass />
+                        </div>
+                  )}
                   <div className="gap-2 justify-center flex flex-row items">
                     {Array.from({ length: player?.cardsLeftCount || 0 }).map(
                       (_, i) => (
